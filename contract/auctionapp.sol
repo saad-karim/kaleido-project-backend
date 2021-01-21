@@ -2,18 +2,15 @@ pragma solidity ^0.4.2;
 
 contract auction {
 
-    uint public startingBid;
-
     uint public bidCount;
 
-    uint public highestBid;
+    uint public bid;
 
     address public highestBidder;
 
     Asset public asset;
 
     struct Bid {
-        uint auctionID;
         address bidder;
         uint amount;
     }
@@ -25,18 +22,16 @@ contract auction {
 
     mapping(uint => Bid) public bids;
 
-    mapping(address => bool) public bidders;
-
-    function auction(string assetForSale, uint bid) public {
+    function auction(string assetForSale, uint startingBid) public {
         asset = Asset(assetForSale, msg.sender);
-        startingBid = bid;
+        bid = startingBid;
     }
 
-    function placeBid(uint auctionID, uint amount) public {
-        bids[bidCount++] = Bid(auctionID, msg.sender, amount);
+    function placeBid(uint amount) public {
+        bids[bidCount++] = Bid(msg.sender, amount);
 
-        if (amount > highestBid) {
-            highestBid = amount;
+        if(amount > bid) {
+            bid = amount;
             highestBidder = msg.sender;
         }
 
