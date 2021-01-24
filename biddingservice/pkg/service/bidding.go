@@ -47,7 +47,7 @@ func (b *Bidding) GetOpenAuctions() ([]byte, error) {
 }
 
 // Get gets the current bid on an auction
-func (b *Bidding) CurrentBid(contractAddress string) (*http.Response, error) {
+func (b *Bidding) CurrentBid(contractAddress string) ([]byte, error) {
 	// url := fmt.Sprintf("https://%s:%s@%s/gateways/%s/%s/bid?kld-from=%s&kld-sync=true", b.Config.KaleidoAuthUsername, b.Config.KaleidoAuthPassword, b.Config.KaleidoRestGatewayURL, b.Config.Gateway, contractAddress, b.Config.FromAddress)
 	url := fmt.Sprintf("%s/bid?kld-from=%s&kld-sync=true", b.baseURL(contractAddress), b.Config.FromAddress)
 
@@ -58,7 +58,12 @@ func (b *Bidding) CurrentBid(contractAddress string) (*http.Response, error) {
 		return nil, errors.Wrap(err, "failed to get current highest bid")
 	}
 
-	return resp, nil
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return respBody, nil
 }
 
 type Response struct {
@@ -128,7 +133,7 @@ func (b *Bidding) BidHistory(contractAddress string) ([]byte, error) {
 	return respBytes, nil
 }
 
-func (b *Bidding) HighestBidder(contractAddress string) (*http.Response, error) {
+func (b *Bidding) HighestBidder(contractAddress string) ([]byte, error) {
 	// url := fmt.Sprintf("https://%s:%s@%s/gateways/%s/%s/highestBidder?kld-from=%s&kld-sync=true", b.Config.KaleidoAuthUsername, b.Config.KaleidoAuthPassword, b.Config.KaleidoRestGatewayURL, b.Config.Gateway, contractAddress, b.Config.FromAddress)
 	url := fmt.Sprintf("%s/highestBidder?kld-from=%s&kld-sync=true", b.baseURL(contractAddress), b.Config.FromAddress)
 
@@ -139,10 +144,15 @@ func (b *Bidding) HighestBidder(contractAddress string) (*http.Response, error) 
 		return nil, errors.Wrap(err, "failed to get current highest bid")
 	}
 
-	return resp, nil
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return respBody, nil
 }
 
-func (b *Bidding) PlaceBid(bidderAddress, contractAddress, bidValue string) (*http.Response, error) {
+func (b *Bidding) PlaceBid(bidderAddress, contractAddress, bidValue string) ([]byte, error) {
 	// url := fmt.Sprintf("https://%s:%s@%s/gateways/%s/%s/placeBid?kld-from=%s&kld-sync=true", b.Config.KaleidoAuthUsername, b.Config.KaleidoAuthPassword, b.Config.KaleidoRestGatewayURL, b.Config.Gateway, contractAddress, b.Config.FromAddress)
 	url := fmt.Sprintf("%s/placeBid?kld-from=%s&kld-sync=true", b.baseURL(contractAddress), bidderAddress)
 
@@ -162,7 +172,12 @@ func (b *Bidding) PlaceBid(bidderAddress, contractAddress, bidValue string) (*ht
 		return nil, errors.Wrap(err, "failed to start/initialize chaincode")
 	}
 
-	return resp, nil
+	respBody, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return respBody, nil
 }
 
 func (b *Bidding) baseURL(contractAddress string) string {

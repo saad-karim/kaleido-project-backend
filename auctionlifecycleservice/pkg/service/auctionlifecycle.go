@@ -32,10 +32,7 @@ type AuctionLifecycle struct {
 
 // Start starts the auction
 func (al *AuctionLifecycle) Start(req *api.StartRequest) (*api.StartAuctionResponse, error) {
-	fmt.Printf("Service - Start: req - %+v\n", req)
-
 	url := fmt.Sprintf("https://%s:%s@%s/gateways/%s/?kld-from=%s&kld-sync=true", al.Config.KaleidoAuthUsername, al.Config.KaleidoAuthPassword, al.Config.KaleidoRestGatewayURL, al.Config.Gateway, al.Config.FromAddress)
-
 	fmt.Println("URL: ", url)
 
 	postBody, err := json.Marshal(req)
@@ -77,10 +74,7 @@ func (al *AuctionLifecycle) Start(req *api.StartRequest) (*api.StartAuctionRespo
 
 // Close closes the auction
 func (al *AuctionLifecycle) Close(req *api.CloseRequest) (*api.CloseAuctionResponse, error) {
-	fmt.Printf("Service - Close: req - %+v\n", req)
-
 	url := fmt.Sprintf("%s/%s/closeAuction?kld-from=%s&kld-sync=true", al.baseURL(), req.ContractAddress, al.Config.FromAddress)
-
 	fmt.Println("URL: ", url)
 
 	_, err := al.Client.Post(url, "application/json", nil)

@@ -12,10 +12,10 @@ import (
 
 type Service interface {
 	GetOpenAuctions() ([]byte, error)
-	CurrentBid(contractAddress string) (*http.Response, error)
+	CurrentBid(contractAddress string) ([]byte, error)
 	BidHistory(contractAddress string) ([]byte, error)
-	HighestBidder(contractAddress string) (*http.Response, error)
-	PlaceBid(bidderAddress, contractAddress, bidValue string) (*http.Response, error)
+	HighestBidder(contractAddress string) ([]byte, error)
+	PlaceBid(bidderAddress, contractAddress, bidValue string) ([]byte, error)
 }
 
 type HTTPServer interface {
@@ -69,15 +69,13 @@ func (s *Server) currentBidEndpoint(w http.ResponseWriter, r *http.Request) {
 	contractAddress := getParam(r, "contractAddress")
 	resp, err := s.Service.CurrentBid(contractAddress)
 	if err != nil {
-		fmt.Println("!!SK >>> ERROR: ", err)
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
 	}
 
-	respBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("!!SK >>> ERROR: ", err)
-	}
+	fmt.Println("/currentbuild endpoint resp: ", string(resp))
 
-	w.Write(respBody)
+	w.Write(resp)
 }
 
 func (s *Server) bidHistoryEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -99,48 +97,51 @@ func (s *Server) bidHistoryEndpoint(w http.ResponseWriter, r *http.Request) {
 func (s *Server) highestBidderEndpoint(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("/highestbidder endpoint")
 
-	// fromAddress := "0xaa3347224b6ca9098db1dcdbc799a2f876d8fdc5"
 	contractAddress := getParam(r, "contractAddress")
 	resp, err := s.Service.HighestBidder(contractAddress)
 	if err != nil {
-		fmt.Println("!!SK >>> ERROR: ", err)
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
 	}
 
-	respBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("!!SK >>> ERROR: ", err)
-	}
+	fmt.Println("/highestbidder endpoint resp: ", string(resp))
 
-	w.Write(respBody)
+	w.Write(resp)
 }
 
 func (s *Server) placeBidEndpoint(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("/placebid endpoint")
 
+	resp, err := s.handlePlaceBid(r)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+	}
+
+	fmt.Println("/placebid endpoint resp: ", string(resp))
+
+	w.Write(resp)
+}
+
+func (s *Server) handlePlaceBid(r *http.Request) ([]byte, error) {
 	contractAddress := getParam(r, "contractAddress")
 	body, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Println("!!SK >>> ERROR: ", err)
+		return nil, err
 	}
 
 	req := &api.Bid{}
 	err = json.Unmarshal(body, req)
 	if err != nil {
-		fmt.Println("!!SK >>> ERROR: ", err)
+		return nil, err
 	}
 
-	// fromAddress := "0xaa3347224b6ca9098db1dcdbc799a2f876d8fdc5"
 	resp, err := s.Service.PlaceBid(req.User, contractAddress, req.Amount)
 	if err != nil {
-		fmt.Println("!!SK >>> ERROR: ", err)
+		return nil, err
 	}
 
-	respBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println("!!SK >>> ERROR: ", err)
-	}
-
-	w.Write(respBody)
+	return resp, nil
 }
 
 func getParam(r *http.Request, param string) string {

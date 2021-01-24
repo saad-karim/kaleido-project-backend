@@ -33,14 +33,5 @@ func (db *DB) GetOpenAuctions() ([]api.AuctionDBRow, error) {
 		return nil, err
 	}
 
-	// auctionRows := make([]api.AuctionDBRow, 0)
-	// for rows.Next() {
-	// 	auction := api.AuctionDBRow{}
-	// 	if err := rows.Scan(&auction); err != nil {
-	// 		return nil, err
-	// 	}
-	// 	auctionRows = append(auctionRows, auction)
-	// }
-
 	return auctionRows, nil
 }

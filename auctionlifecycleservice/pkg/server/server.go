@@ -111,9 +111,6 @@ func (s *Server) handleClose(r *http.Request) ([]byte, error) {
 		return nil, errors.Wrap(err, "invalid body in request")
 	}
 
-	// Check if from address matches the create and has proper authentication to close auction
-
-	// fromAddress := "0xaa3347224b6ca9098db1dcdbc799a2f876d8fdc5"
 	resp, err := s.Service.Close(req)
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to stop auction")

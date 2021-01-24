@@ -14,12 +14,16 @@ import (
 func main() {
 	db, err := service.DBOpen("postgres://ehmebenp:ZpzdWGX6WUCmT20psUP-jP4jmOAZb642@ziggy.db.elephantsql.com:5432/ehmebenp")
 	if err != nil {
-		fmt.Println("ERROR: ", err)
+		fmt.Println("DB ERROR: ", err)
 		os.Exit(1)
 	}
 
+	cfg := config.APIGateway()
+	cfg.KaleidoAuthPassword = os.Getenv("KaleidoAuthPassword")
+	cfg.KaleidoAuthUsername = os.Getenv("KaleidoAuthUsername")
+
 	auctionLifecycleService := &service.AuctionLifecycle{
-		Config: config.APIGateway(),
+		Config: cfg,
 		Client: &http.Client{},
 		DB:     db,
 	}

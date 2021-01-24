@@ -39,25 +39,6 @@ func (db *DB) InsertAuction(row *api.AuctionDBRow) error {
 	return nil
 }
 
-func (db *DB) GetOpenAuctions() ([]api.AuctionDBRow, error) {
-	query := "SELECT * from auction WHERE closed = $1"
-	rows, err := db.DB.Query(query, false)
-	if err != nil {
-		return nil, err
-	}
-
-	auctionRows := make([]api.AuctionDBRow, 0)
-	for rows.Next() {
-		auction := api.AuctionDBRow{}
-		if err := rows.Scan(&auction); err != nil {
-			return nil, err
-		}
-		auctionRows = append(auctionRows, auction)
-	}
-
-	return auctionRows, nil
-}
-
 func (db *DB) CloseAuction(auctionID string) error {
 	query := fmt.Sprintf("UPDATE auction SET closed = TRUE WHERE id = '%s'", auctionID)
 	fmt.Println("Close Auction Query: ", query)
