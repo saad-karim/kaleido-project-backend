@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: auctionapp
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+spec:
+  # tls: 
+  # - hosts:
+  #   - skarim-auctionlifecycle.test-automation1-68e10f583f026529fe7a89da40169ef4-0001.us-south.containers.appdomain.cloud
+  #   - skarim-bidding.test-automation1-68e10f583f026529fe7a89da40169ef4-0001.us-south.containers.appdomain.cloud
+  #   secretName: auctionapp-tls
+  rules:
+  - host: skarim-auctionlifecycle.test-automation1-68e10f583f026529fe7a89da40169ef4-0001.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - backend:
+          serviceName: auctionlifecycle
+          servicePort: http
+        path: /
+  - host: skarim-bidding.test-automation1-68e10f583f026529fe7a89da40169ef4-0001.us-south.containers.appdomain.cloud
+    http:
+      paths:
+      - backend:
+          serviceName: bidding
+          servicePort: http
+        path: /

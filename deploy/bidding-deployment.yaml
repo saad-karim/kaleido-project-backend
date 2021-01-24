@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bidding
+  labels:
+    app: bidding
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bidding
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: bidding
+    spec:
+      containers:
+        - name: bidding
+          image: saadk10/biddingservice:v1.0.0
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3100

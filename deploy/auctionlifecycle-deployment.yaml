@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auctionlifecycle
+  labels:
+    app: auctionlifecycle
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auctionlifecycle
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: auctionlifecycle
+    spec:
+      containers:
+        - name: auctionlifecycle
+          image: saadk10/auctionlifecycleservice:v1.0.0
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3100

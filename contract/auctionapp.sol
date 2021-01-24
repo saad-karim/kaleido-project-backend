@@ -8,6 +8,8 @@ contract auction {
 
     address public highestBidder;
 
+    bool public closed;
+
     Asset public asset;
 
     struct Bid {
@@ -28,6 +30,9 @@ contract auction {
     }
 
     function placeBid(uint amount) public {
+        require(closed == true, "Can't place bid, auction is closed");
+        require(amount <= bid, "Bid must be higher than the current bid");
+        
         bids[bidCount++] = Bid(msg.sender, amount);
 
         if(amount > bid) {
@@ -40,6 +45,7 @@ contract auction {
 
     function closeAuction() public {
         asset.owner = highestBidder;
+        closed = true
 
         emit auctionClosed();
     }
