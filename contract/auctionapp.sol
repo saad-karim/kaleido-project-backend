@@ -45,7 +45,7 @@ contract auction {
 
     function closeAuction() public {
         asset.owner = highestBidder;
-        closed = true
+        closed = true;
 
         emit auctionClosed();
     }
