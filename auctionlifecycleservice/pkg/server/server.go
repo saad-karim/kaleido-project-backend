@@ -53,6 +53,7 @@ func (s *Server) startEndpoint(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	fmt.Println("/start endpoint resp: ", string(respBody))
@@ -92,6 +93,7 @@ func (s *Server) closeEndpoint(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	fmt.Println("/close endpoint resp: ", string(respBody))

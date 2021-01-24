@@ -71,6 +71,7 @@ func (s *Server) currentBidEndpoint(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	fmt.Println("/currentbuild endpoint resp: ", string(resp))
@@ -87,6 +88,7 @@ func (s *Server) bidHistoryEndpoint(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	fmt.Println("/bidhistory endpoint resp: ", string(resp))
@@ -102,6 +104,7 @@ func (s *Server) highestBidderEndpoint(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	fmt.Println("/highestbidder endpoint resp: ", string(resp))
@@ -116,6 +119,7 @@ func (s *Server) placeBidEndpoint(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(500)
 		w.Write([]byte(err.Error()))
+		return
 	}
 
 	fmt.Println("/placebid endpoint resp: ", string(resp))
